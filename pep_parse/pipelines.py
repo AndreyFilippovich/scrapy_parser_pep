@@ -7,7 +7,7 @@ from .settings import DATETIME_FORMAT, BASE_DIR, RESULT_DIR
 class PepParsePipeline:
 
     def open_spider(self, spider):
-        d = defaultdict(int)
+        self.d = defaultdict(int)
 
     def process_item(self, item, spider):
         self.d[item['status']] += 1
