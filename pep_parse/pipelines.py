@@ -1,4 +1,5 @@
 import datetime as dt
+from collections import defaultdict
 
 from .settings import DATETIME_FORMAT, BASE_DIR, RESULT_DIR
 
@@ -6,13 +7,10 @@ from .settings import DATETIME_FORMAT, BASE_DIR, RESULT_DIR
 class PepParsePipeline:
 
     def open_spider(self, spider):
-        self.results = {}
+        d = defaultdict(int)
 
     def process_item(self, item, spider):
-        if item['status'] not in self.results:
-            self.results[item['status']] = 1
-        else:
-            self.results[item['status']] += 1
+        self.d[item['status']] += 1
         return item
 
     def close_spider(self, spider):
@@ -23,8 +21,5 @@ class PepParsePipeline:
         file_path = results_dir / filename
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write('Статус,Количество\n')
-            total = 0
-            for key, value in self.results.items():
-                total += value
-                f.write(f'{key},{value}\n')
+            total = sum(self.d.value())
             f.write(f'Total,{total}\n')
